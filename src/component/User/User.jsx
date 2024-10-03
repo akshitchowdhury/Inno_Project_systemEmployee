@@ -1,43 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchUsers } from '../Reducers/AuthSlice';
 
 const User = () => {
-    
-    const[users,setUsers] = useState([])
-    
-    const fetchUsers = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/users', {
-        method: 'GET',
-      });
+  const dispatch = useDispatch();
+  const { users } = useSelector((state) => state.auth);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch users');
-      }
+  // Fetch users when the component mounts
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
-      const data = await response.json();
-      setUsers(data);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    }
-  };
-
-  useEffect(()=>{
-    fetchUsers()
-  },[users])
-
-    return (
+  return (
     <div>
-        {
-            users.map((user,index)=>(
-                <>
-                <div key={user._id}>
-                    <p>{user.username}</p>
-                    </div>
-                </>
-            ))
-        }
+      {users.length > 0 ? (
+        users.map((user) => (
+          <div key={user.id}>{user.username}</div>
+        ))
+      ) : (
+        <p>No users available</p>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default User
+export default User;
