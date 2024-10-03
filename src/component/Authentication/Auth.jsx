@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import logo from "../../assets/innomatric_logo_only.png"
+import UserProfile from '../User/UserProfile'
 const Auth = () => {
     const [users, setUsers] = useState([])
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const[isAuth,setIsAuth] = useState(false)
 
     const fetchUsers = async () => {
         try {
@@ -24,15 +26,39 @@ const Auth = () => {
         if (user) {
             alert(`Welcome ${user.username}
                 Your department is ${user.department}`);
-            setEmail('');
-            setPassword('');
+                setIsAuth(true)
+
+                const submitAuth = async () => {
+                    try {
+                        const response = await fetch('http://localhost:3000/users/login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ email,password }),
+                        });
+                        if (!response.ok) throw new Error('Failed to submit auth');
+                        const result = await response.json();
+                        console.log(result);
+                        
+                submitAuth();
+                setEmail('');
+                setPassword('');
+                    } catch (error) {
+                        console.error('Error submitting auth:', error);
+                    }
+                }
+
         } else {
             alert('Login Failed');
         }
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+       <>
+       {
+           isAuth ? <UserProfile email={email} password={password} users={users}/> :
+           <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
             <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 space-y-4">
                 {/* Logo */}
                 <div className="flex justify-center mb-6">
@@ -75,6 +101,9 @@ const Auth = () => {
                 </div>
             </div>
         </div>
+       }
+       
+</>
     );
 }
 
