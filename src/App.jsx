@@ -7,10 +7,14 @@ import Auth from './component/Authentication/Auth'
 
 function App() {
 
+
   return (
     <>
-      <Auth/>
-      <User/>
+    
+
+
+      {/* <Auth/> */}
+      {/* <User/> */}
     </>
   )
 }
