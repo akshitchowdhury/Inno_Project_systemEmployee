@@ -1,30 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import User from './component/User/User'
-import Auth from './component/Authentication/Auth'
-import { useDispatch, useSelector } from 'react-redux'
-
+import { useSelector } from 'react-redux';
+import User from './component/User/User';
+import Auth from './component/Authentication/Auth';
+import './App.css';
 function App() {
-
   const auth = useSelector((state) => state.auth);
 
+  // Show a loading spinner if authentication is in progress
+  if (auth.loading) {
+    return (
+      <div className="loading-spinner">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <>
-    Hello
-{
-  auth.isAuthenticated ? (
-    <User />
-  ) : (
-    <Auth />
-  )
-}
-      {/* <Auth/> */}
-      {/* <User/> */}
+      {auth.isAuthenticated===true ? <User /> : <Auth />}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
