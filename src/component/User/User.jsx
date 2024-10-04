@@ -24,13 +24,14 @@ const User = () => {
   return (
     <>
     <Link to="/sendMail">Send Mail</Link>
+    <Link to="/receiveMail">Check Mail</Link>
     <div className="user-container">
       <h1>Welcome, {user.username}</h1>
       <p>Email: {user.email}</p>
       <p>Department: {user.department}</p>
       <button onClick={handleLogout}>Logout</button>
     </div>
-    <Message/>
+    {/* <Message/> */}
     </>
     
   );

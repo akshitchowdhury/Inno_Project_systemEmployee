@@ -6,11 +6,17 @@ const initialState = {
     error: null, // Stores any error messages
     loading: false, // Tracks loading state for async operations
     users: [], // All users fetched from backend
+    emailList: [], // All emails fetched from backend
 };
 
 // Async thunk to fetch users from backend
 export const fetchUsers = createAsyncThunk('auth/fetchUsers', async () => {
     const response = await fetch('/users', { method: 'GET' });
+    const data = await response.json();
+    return data;
+});
+export const fetchEmplMail = createAsyncThunk('auth/fetchMail', async () => {
+    const response = await fetch('/messages/getEmployeeMessages', { method: 'GET' });
     const data = await response.json();
     return data;
 });
@@ -153,6 +159,16 @@ const authSlice = createSlice({
                 state.users = action.payload;
             })
             .addCase(fetchUsers.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+            // Handle fetch employee mail logic
+            .addCase(fetchEmplMail.fulfilled, (state, action) => {
+                state.loading = false;
+                state.emailList = action.payload;
+            })
+            .addCase(fetchEmplMail.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })

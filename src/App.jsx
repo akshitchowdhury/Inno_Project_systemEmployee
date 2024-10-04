@@ -6,6 +6,7 @@ import Auth from './component/Authentication/Auth';
 import User from './component/User/User';
 import { checkLoggedIn } from './component/Reducers/AuthSlice';
 import SendMail from './component/Messages/SendMail';
+import Message from './component/Messages/Message';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path='/sendMail' element={<SendMail/>} />
+        <Route path='/receiveMail' element={<Message/>} />
         {/* Route for login page */}
         <Route path="/login" element={!user ? <Auth /> : <Navigate to="/user" />} />
 
