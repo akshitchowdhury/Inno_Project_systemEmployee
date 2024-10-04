@@ -1,51 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchUsers, loggedOutUser } from '../Reducers/AuthSlice';
-import Auth from '../Authentication/Auth';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { useNavigate } from 'react-router-dom';
+import { loggedOutUser } from '../Reducers/AuthSlice';
 
 const User = () => {
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const[logOutStatus,setLogOutStatus] = useState(false)
-  const { users, user, isAuthenticated } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  // Fetch users when the component mounts
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
-
-  // Find the logged-in user based on stored credentials
-  const verifiedUser = users.find(
-    (u) => u.email === user?.email && u.password === user?.password
-  );
-
-  const handleLogout = (id) => {
-    
-    
-    dispatch(loggedOutUser({ id, isLoggedIn: false }));
-    !isAuthenticated && setLogOutStatus(!logOutStatus);
-    console.log(`IsAuthenticated value: ${isAuthenticated}
-      and logOutStatus value: ${logOutStatus}`);
-  };
-
-  // Only render the User component if the user is authenticated
-  
+  const handleLogout = () => {
+    dispatch(loggedOutUser())
+      .unwrap() // This allows you to handle the result of the thunk
+      .then(() => {
+        localStorage.removeItem('token'); 
+        window.location.reload();
+        navigate('/login'); 
+      })
+      .catch((err) => console.error(err)); // Handle errors here
+};
 
   return (
-    <>
-
-        
-    <div>
-    <h1>User</h1>
-    <p>{verifiedUser.username}</p>
-    <p>{verifiedUser.email}</p>
-    <p>{verifiedUser.password}</p>
-    <p>{verifiedUser.department}</p>
-    <button className="bg-red-500 p-4" onClick={() => handleLogout(verifiedUser._id)}>Logout</button>
-        </div>
-      
-    </>
+    <div className="user-container">
+      <h1>Welcome, {user.username}</h1>
+      <p>Email: {user.email}</p>
+      <p>Department: {user.department}</p>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
   );
-  
 };
 
 export default User;
