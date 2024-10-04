@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
 import { loggedOutUser } from '../Reducers/AuthSlice';
+import Message from '../Messages/Message';
 
 const User = () => {
   const { user } = useSelector((state) => state.auth);
@@ -21,12 +22,16 @@ const User = () => {
 };
 
   return (
+    <>
     <div className="user-container">
       <h1>Welcome, {user.username}</h1>
       <p>Email: {user.email}</p>
       <p>Department: {user.department}</p>
       <button onClick={handleLogout}>Logout</button>
     </div>
+    <Message/>
+    </>
+    
   );
 };
 
