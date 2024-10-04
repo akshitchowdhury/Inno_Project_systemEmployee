@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Auth from './component/Authentication/Auth';
 import User from './component/User/User';
 import { checkLoggedIn } from './component/Reducers/AuthSlice';
+import SendMail from './component/Messages/SendMail';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path='/sendMail' element={<SendMail/>} />
         {/* Route for login page */}
         <Route path="/login" element={!user ? <Auth /> : <Navigate to="/user" />} />
 

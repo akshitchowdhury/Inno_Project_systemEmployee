@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { loggedOutUser } from '../Reducers/AuthSlice';
 import Message from '../Messages/Message';
 
@@ -23,6 +23,7 @@ const User = () => {
 
   return (
     <>
+    <Link to="/sendMail">Send Mail</Link>
     <div className="user-container">
       <h1>Welcome, {user.username}</h1>
       <p>Email: {user.email}</p>
