@@ -22,6 +22,7 @@ const App = () => {
   }
 
   return (
+    <div className='p-4'>
     <Router>
       <Routes>
         <Route path='/sendMail' element={<SendMail/>} />
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="*" element={user ? <Navigate to="/user" /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
+    </div>
   );
 };
 

@@ -21,6 +21,21 @@ export const fetchEmplMail = createAsyncThunk('auth/fetchMail', async () => {
     return data;
 });
 
+export const delEmpMessage = createAsyncThunk('auth/delEmpMessage', async (id) => {
+   try {
+    const response = await fetch(`/messages/${id}`, {method: 'DELETE'});
+    if (!response.ok) {
+        throw new Error('Failed to delete email');
+    }
+    const data = await response.json();
+    alert("Email deleted succesfully")
+   } catch (error) {
+    console.error('Error deleting email:', error);
+    alert('Error deleting email: ' + error.message);
+   }
+    
+});
+
 // Async thunk to handle login functionality
 export const loggedInUser = createAsyncThunk(
     'auth/loggedInUser',
@@ -169,6 +184,15 @@ const authSlice = createSlice({
                 state.emailList = action.payload;
             })
             .addCase(fetchEmplMail.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+
+            .addCase(delEmpMessage.fulfilled, (state, action) => {
+                state.loading = false;
+                state.emailList = action.payload;
+            })
+            .addCase(delEmpMessage.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })

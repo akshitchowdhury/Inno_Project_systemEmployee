@@ -4,21 +4,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import { fetchEmplMail, fetchUsers } from '../Reducers/AuthSlice';
 
 const Message = () => {
-    const { emailList,user } = useSelector((state) => state.auth);
+    const { emailList,user,users } = useSelector((state) => state.auth);
     const navigate = useNavigate();
     const [bgColor, setBgColor] = useState('bg-red-500');
     const dispatch = useDispatch();
     
     useEffect(() => {
+        const fetchData = () => {
+            dispatch(fetchEmplMail());
+            dispatch(fetchUsers());
+        };
         const intervalId = setInterval(() => {
             setBgColor(prevColor => prevColor === 'bg-red-500' ? 'bg-green-500' : 'bg-red-500');
+            fetchData();
         }, 5000); 
-        dispatch(fetchEmplMail());
-        dispatch(fetchUsers());
+
         
         return () => clearInterval(intervalId);
     }, [dispatch]);
 
+    // const handleDelete = (id)=>{
+    //     dispatch(fetchEmplMail(id))
+    // }
     return (
         <div className="container mx-auto p-4">
             {/* Header with navigation */}
@@ -26,6 +33,10 @@ const Message = () => {
                 <h1 className="text-2xl font-bold text-gray-800">Inbox</h1>
                 <Link to="/sendMail" className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
                     Send Mail
+                </Link>
+            
+                <Link to="/user" className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">
+                    Home
                 </Link>
             </div>
 
@@ -37,31 +48,32 @@ const Message = () => {
                             <th className="py-2 px-4 text-left text-gray-600">Sender</th>
                             <th className="py-2 px-4 text-left text-gray-600">Receiver</th>
                             <th className="py-2 px-4 text-left text-gray-600">Message</th>
+                            <th className="py-2 px-4 text-left text-gray-600">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {emailList.map((email, index) => {
-                           
-                           const verifiedUser = user.username === email.receiver_username
-                           return(
-                           
-                            <tr
-                                key={index}
-                                className={`hover:bg-gray-50 border-b ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
-                            >
-                                <td className="py-3 px-4 font-medium text-gray-700">
-                                    {verifiedUser? email.sender_email : ''}
-                                </td>
+  {emailList
+    .filter((email) => user.username === email.receiver_username).map((email, index) => (
+      <tr
+        key={index}
+        className={`hover:bg-gray-50 border-b ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
+      >
+        <td className="py-3 px-4 font-medium text-gray-700">
+         ADMIN
+        </td>
 
-                                <td className="py-3 px-4 text-gray-600">{verifiedUser? email.receiver_username: ''}</td>
-                                {/* <td className="py-3 px-4 text-gray-600">Curr user: {user.username}</td> */}
-                                <td className="py-3 px-4 text-gray-500 truncate">
-                                    {verifiedUser? email.messages[0] : '' }
-                                </td>
-                            </tr>
-                           )
-                        })}
-                    </tbody>
+        <td className="py-3 px-4 text-gray-600">{email.receiver_username}</td>
+
+        <td className="py-3 px-4 text-gray-500 truncate">
+          {email.messages[0]}
+        </td>
+        <td className="py-3 px-4 text-gray-600">
+            Delete Message
+        </td>
+      </tr>
+    ))}
+</tbody>
+
                 </table>
             </div>
         </div>
