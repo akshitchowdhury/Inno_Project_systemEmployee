@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchEmplMail } from '../Reducers/AuthSlice';
+import { fetchEmplMail, fetchUsers } from '../Reducers/AuthSlice';
 
 const Message = () => {
-    const { emailList } = useSelector((state) => state.auth);
+    const { emailList,user } = useSelector((state) => state.auth);
     const navigate = useNavigate();
     const [bgColor, setBgColor] = useState('bg-red-500');
     const dispatch = useDispatch();
@@ -14,6 +14,7 @@ const Message = () => {
             setBgColor(prevColor => prevColor === 'bg-red-500' ? 'bg-green-500' : 'bg-red-500');
         }, 5000); 
         dispatch(fetchEmplMail());
+        dispatch(fetchUsers());
         
         return () => clearInterval(intervalId);
     }, [dispatch]);
@@ -39,20 +40,27 @@ const Message = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {emailList.map((email, index) => (
+                        {emailList.map((email, index) => {
+                           
+                           const verifiedUser = user.username === email.receiver_username
+                           return(
+                           
                             <tr
                                 key={index}
                                 className={`hover:bg-gray-50 border-b ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
                             >
                                 <td className="py-3 px-4 font-medium text-gray-700">
-                                    {email.sender_email}
+                                    {verifiedUser? email.sender_email : ''}
                                 </td>
-                                <td className="py-3 px-4 text-gray-600">{email.receiver_username}</td>
+
+                                <td className="py-3 px-4 text-gray-600">{verifiedUser? email.receiver_username: ''}</td>
+                                {/* <td className="py-3 px-4 text-gray-600">Curr user: {user.username}</td> */}
                                 <td className="py-3 px-4 text-gray-500 truncate">
-                                    {email.messages[0] }
+                                    {verifiedUser? email.messages[0] : '' }
                                 </td>
                             </tr>
-                        ))}
+                           )
+                        })}
                     </tbody>
                 </table>
             </div>
