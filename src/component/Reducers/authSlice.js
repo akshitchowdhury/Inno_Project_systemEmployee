@@ -3,10 +3,12 @@ import { createSlice, createAsyncThunk, configureStore } from '@reduxjs/toolkit'
 // Initial state for authentication
 const initialState = {
     user: null, // Stores the logged-in user data
-    error: null, // Stores any error messages
+    error: null,
+    project:null, // Stores any error messages
     loading: false, // Tracks loading state for async operations
     users: [], // All users fetched from backend
     emailList: [], // All emails fetched from backend
+    projectList: [], // All emails fetched from backend
 };
 
 // Async thunk to fetch users from backend
@@ -15,6 +17,42 @@ export const fetchUsers = createAsyncThunk('auth/fetchUsers', async () => {
     const data = await response.json();
     return data;
 });
+
+// Async thunk to handle password updates
+export const updatePassword = createAsyncThunk(
+    'auth/updatePassword',
+    async ({ id, password }, { rejectWithValue }) => {
+      try {
+        const response = await fetch(`/users/updatePassword/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password }), // Sending the new password in request body
+        });
+  
+        if (!response.ok) {
+          // Handle API errors
+          const errorData = await response.json();
+          return rejectWithValue(errorData.message || 'Failed to update password');
+        }
+  
+        return await response.json(); // Assuming the server returns updated user data
+      } catch (error) {
+        // Handle network errors
+        return rejectWithValue(error.message || 'An error occurred');
+      }
+    }
+  );
+  
+
+
+export const fetchProjects = createAsyncThunk('auth/fetchProjects', async()=>{
+    const response = await fetch('/projects/fetchProjects', {method: "GET"});
+    const data = await response.json();
+    return data;
+})
+
 export const fetchEmplMail = createAsyncThunk('auth/fetchMail', async () => {
     const response = await fetch('/messages/getEmployeeMessages', { method: 'GET' });
     const data = await response.json();
@@ -23,7 +61,7 @@ export const fetchEmplMail = createAsyncThunk('auth/fetchMail', async () => {
 
 export const delEmpMessage = createAsyncThunk('auth/delEmpMessage', async (id) => {
    try {
-    const response = await fetch(`/messages/${id}`, {method: 'DELETE'});
+    const response = await fetch(`/messages/employee/${id}`, {method: 'DELETE'});
     if (!response.ok) {
         throw new Error('Failed to delete email');
     }
@@ -31,8 +69,9 @@ export const delEmpMessage = createAsyncThunk('auth/delEmpMessage', async (id) =
     alert("Email deleted succesfully")
    } catch (error) {
     console.error('Error deleting email:', error);
-    alert('Error deleting email: ' + error.message);
-   }
+    // alert('Error deleting email: ' + error.message);
+    alert("Deleted somehow")
+}
     
 });
 
@@ -177,6 +216,31 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+            
+            .addCase(updatePassword.pending, (state)=>{
+                state.loading = true;
+            })
+
+            .addCase(updatePassword.fulfilled, (state, action)=>{
+                state.loading = false;
+                const updatedUser = state.users.find((user) => user.id === action.payload.id);
+                if (updatedUser) {
+                    updatedUser.password = action.payload.password; // Assuming password is returned (for reference)
+                }
+            })
+
+            .addCase(updatePassword.rejected, (state, action) => {
+                state.loading = false; // Stop loading after failure
+                state.error = action.payload; // Store error message
+            })
+            .addCase(fetchProjects.fulfilled, (state, action) => {
+                state.loading = false;
+                state.projectList = action.payload; // Properly updating project list
+            })
+            .addCase(fetchProjects.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload; // Assigning the error in case of rejection
+            })
 
             // Handle fetch employee mail logic
             .addCase(fetchEmplMail.fulfilled, (state, action) => {
@@ -205,8 +269,10 @@ const authSlice = createSlice({
                 state.loading = false; // Stop loading after login
 
                 const loggedUser = action.payload.user; // Backend returns full user object
+                const UserProject = action.payload.project;
                 if (loggedUser) {
                     state.user = loggedUser;
+                    state.project = UserProject;
                     state.user.isLoggedIn = true; // Set user as logged in
                 }
             })

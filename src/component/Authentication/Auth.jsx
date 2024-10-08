@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loggedInUser } from '../Reducers/AuthSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -18,13 +18,17 @@ const Auth = () => {
         localStorage.setItem('token', response.token); // Store the JWT token in localStorage
         navigate('/user'); // Redirect to user page after successful login
       })
-      .catch((err) => console.error(err));
-  };
+      .catch((err) =>{
+        console.error(err)
+        alert("Inavlid credentials..Please try again")
+      });
+      
+    };
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg space-y-6">
-        <h2 className="text-3xl font-bold text-gray-800 text-center">Login to CRM</h2>
+        <h2 className="text-3xl font-bold text-gray-800 text-center">Login to Profile</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
@@ -42,6 +46,7 @@ const Auth = () => {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
             required
           />
+          <div className='flex flex-row gap-6'>
           <button
             type="submit"
             disabled={loading}
@@ -49,8 +54,14 @@ const Auth = () => {
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
+          <Link to="/forgotPassword"         
+            
+            className="w-full  hover:underline text-indigo-500  font-light p-2 rounded-lg transition-colors duration-300">
+            Forgot Password
+          </Link>
+          </div>
         </form>
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {error && <p className="text-red-500 text-center">Please Log in to your profile</p>}
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ const SendMail = () => {
   const [recipient, setRecipient] = useState('');
   const [message, setMessage] = useState('');
   const { users, user, loading, error } = useSelector((state) => state.auth);
-  const adminName = "Parmesh C S";
+  const adminName = "ADMIN";
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -51,10 +51,11 @@ const SendMail = () => {
     <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center justify-center">
       <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
         <Link to="/user" className="text-blue-600 mb-4 block">Home</Link>
+        <Link to="/receiveMail" className="text-blue-600 mb-4 block">Check Mail</Link>
         <h1 className="text-2xl font-semibold text-gray-700 mb-4">Send your email</h1>
         <form onSubmit={handleSubmission} className="space-y-4">
           {loading && <p className="text-yellow-500">Loading users...</p>}
-          {error && <p className="text-red-500">Error fetching users: {error}</p>}
+          {error && <p className="text-red-500">Only to ADMIN access is allowed for messaging </p>}
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"

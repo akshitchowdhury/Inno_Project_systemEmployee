@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchEmplMail, fetchUsers } from '../Reducers/AuthSlice';
+import { delEmpMessage, fetchEmplMail, fetchUsers } from '../Reducers/AuthSlice';
 
 const Message = () => {
     const { emailList,user,users } = useSelector((state) => state.auth);
@@ -17,15 +17,17 @@ const Message = () => {
         const intervalId = setInterval(() => {
             setBgColor(prevColor => prevColor === 'bg-red-500' ? 'bg-green-500' : 'bg-red-500');
             fetchData();
-        }, 5000); 
+        }, 3000); 
 
         
         return () => clearInterval(intervalId);
     }, [dispatch]);
 
-    // const handleDelete = (id)=>{
-    //     dispatch(fetchEmplMail(id))
-    // }
+    const handleDelete = (id)=>{
+        dispatch(delEmpMessage(id))
+        emailList.filter((email) => email.id !== id);
+        window.location.reload();
+    }
     return (
         <div className="container mx-auto p-4">
             {/* Header with navigation */}
@@ -48,6 +50,7 @@ const Message = () => {
                             <th className="py-2 px-4 text-left text-gray-600">Sender</th>
                             <th className="py-2 px-4 text-left text-gray-600">Receiver</th>
                             <th className="py-2 px-4 text-left text-gray-600">Message</th>
+                            <th className="py-2 px-4 text-left text-gray-600">Date</th>
                             <th className="py-2 px-4 text-left text-gray-600">Actions</th>
                         </tr>
                     </thead>
@@ -67,7 +70,25 @@ const Message = () => {
         <td className="py-3 px-4 text-gray-500 truncate">
           {email.messages[0]}
         </td>
-        <td className="py-3 px-4 text-gray-600">
+        <td>
+  {
+    (() => {
+      const date = new Date(email.createdAt);
+      const options = {
+        timeZone: 'Asia/Kolkata', 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit',
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit'
+      };
+      return date.toLocaleDateString('en-US', options) ;
+    })()
+  }
+</td>
+
+        <td onClick={() => handleDelete(email._id)} className="cursor-pointer py-3 px-4 text-gray-600">
             Delete Message
         </td>
       </tr>

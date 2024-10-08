@@ -7,6 +7,7 @@ import User from './component/User/User';
 import { checkLoggedIn } from './component/Reducers/AuthSlice';
 import SendMail from './component/Messages/SendMail';
 import Message from './component/Messages/Message';
+import ForgotPassword from './component/Authentication/ForgotPassword';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const App = () => {
       <Routes>
         <Route path='/sendMail' element={<SendMail/>} />
         <Route path='/receiveMail' element={<Message/>} />
+        <Route path='/forgotPassword' element={<ForgotPassword/>} />
         {/* Route for login page */}
         <Route path="/login" element={!user ? <Auth /> : <Navigate to="/user" />} />
 
