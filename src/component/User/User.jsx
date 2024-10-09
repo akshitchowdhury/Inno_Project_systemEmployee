@@ -78,6 +78,7 @@ const User = () => {
               <option value="WFO">Working from Office (WFO)</option>
               <option value="WFH">Working from Home (WFH)</option>
               <option value="Leave">Leave</option>
+              <option value="Off Duty">Logging Out</option>
             </select>
             <button
               type="submit"
@@ -89,11 +90,11 @@ const User = () => {
 
 
       <div className="mt-2">
-        {workMode && (
+        
           <p className="text-sm text-gray-500">
-            Selected Mode: <span className="font-semibold">{workMode}</span>
+            Selected Mode: <span className="font-semibold">{user.isPresent}</span>
           </p>
-        )}
+      
       </div>
     </div>
 
