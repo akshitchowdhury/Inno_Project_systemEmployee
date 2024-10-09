@@ -59,6 +59,34 @@ export const fetchEmplMail = createAsyncThunk('auth/fetchMail', async () => {
     return data;
 });
 
+export const updateWorkMode = createAsyncThunk(
+    'auth/updateWorkMode',
+    async ({ id, isPresent }, { rejectWithValue }) => {
+        try {
+            const response = await fetch(`/users/updateWorkMode/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ isPresent }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                return rejectWithValue(errorData.message || 'Failed to update work mode');
+            }
+
+            // Return the updated data so Redux state can be updated
+            const data = await response.json();
+            alert(`Work mode updated succesfully to ${isPresent}`)
+            return data; 
+        } catch (error) {
+            return rejectWithValue(error.message || 'An error occurred');
+        }
+    }
+);
+
+
 export const delEmpMessage = createAsyncThunk('auth/delEmpMessage', async (id) => {
    try {
     const response = await fetch(`/messages/employee/${id}`, {method: 'DELETE'});
@@ -251,6 +279,19 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+
+            .addCase(updateWorkMode.pending, (state) => {
+                state.loading = true;
+            })
+
+            .addCase(updateWorkMode.fulfilled, (state, action) => {
+                state.loading = false;
+                // Assuming the server sends back the updated work mode
+                if (state.user) {
+                    state.user.isPresent = action.payload.isPresent; // Update the work mode in state
+                }
+            })
+            
 
             .addCase(delEmpMessage.fulfilled, (state, action) => {
                 state.loading = false;
