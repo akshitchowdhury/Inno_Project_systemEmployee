@@ -35,7 +35,7 @@ const User = () => {
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchProjects());
-  }, []);
+  }, [dispatch]);
 
   // Filter projects where the current user is assigned
   const assignedProject = projectList.find(
