@@ -10,10 +10,10 @@ const initialState = {
     emailList: [], // All emails fetched from backend
     projectList: [], // All emails fetched from backend
 };
-
+const baseUrl = import.meta.env.VITE_BASE_URL;
 // Async thunk to fetch users from backend
 export const fetchUsers = createAsyncThunk('auth/fetchUsers', async () => {
-    const response = await fetch('/users', { method: 'GET' });
+    const response = await fetch(`${baseUrl}/users`, { method: 'GET' });
     const data = await response.json();
     return data;
 });
@@ -23,7 +23,7 @@ export const updatePassword = createAsyncThunk(
     'auth/updatePassword',
     async ({ id, password }, { rejectWithValue }) => {
       try {
-        const response = await fetch(`/users/updatePassword/${id}`, {
+        const response = await fetch(`${baseUrl}/users/updatePassword/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -48,13 +48,13 @@ export const updatePassword = createAsyncThunk(
 
 
 export const fetchProjects = createAsyncThunk('auth/fetchProjects', async()=>{
-    const response = await fetch('/projects/fetchProjects', {method: "GET"});
+    const response = await fetch(`${baseUrl}/projects/fetchProjects`, {method: "GET"});
     const data = await response.json();
     return data;
 })
 
 export const fetchEmplMail = createAsyncThunk('auth/fetchMail', async () => {
-    const response = await fetch('/messages/getEmployeeMessages', { method: 'GET' });
+    const response = await fetch(`${baseUrl}/messages/getEmployeeMessages`, { method: 'GET' });
     const data = await response.json();
     return data;
 });
@@ -63,7 +63,7 @@ export const updateWorkMode = createAsyncThunk(
     'auth/updateWorkMode',
     async ({ id, isPresent }, { rejectWithValue }) => {
         try {
-            const response = await fetch(`/users/updateWorkMode/${id}`, {
+            const response = await fetch(`${baseUrl}/users/updateWorkMode/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export const updateWorkMode = createAsyncThunk(
 
 export const delEmpMessage = createAsyncThunk('auth/delEmpMessage', async (id) => {
    try {
-    const response = await fetch(`/messages/employee/${id}`, {method: 'DELETE'});
+    const response = await fetch(`${baseUrl}/messages/employee/${id}`, {method: 'DELETE'});
     if (!response.ok) {
         throw new Error('Failed to delete email');
     }
@@ -108,7 +108,7 @@ export const loggedInUser = createAsyncThunk(
     'auth/loggedInUser',
     async ({ email, password }, { rejectWithValue }) => {
         try {
-            const response = await fetch('/users/login', {
+            const response = await fetch(`${baseUrl}/users/login`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ export const loggedOutUser = createAsyncThunk(
                 throw new Error('No token found');
             }
 
-            const response = await fetch('/users/logout', {
+            const response = await fetch(`${baseUrl}/users/logout`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ export const checkLoggedIn = createAsyncThunk(
       }
   
       try {
-        const response = await fetch('/users/validate-token', {
+        const response = await fetch(`${baseUrl}/users/validate-token`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
