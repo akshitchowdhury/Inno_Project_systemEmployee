@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers } from '../Reducers/AuthSlice';
+import { fetchUsers } from '../Reducers/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Auth from './component/Authentication/Auth';
 import User from './component/User/User';
-import { checkLoggedIn } from './component/Reducers/AuthSlice';
+import { checkLoggedIn } from './component/Reducers/authSlice';
 import SendMail from './component/Messages/SendMail';
 import Message from './component/Messages/Message';
 import ForgotPassword from './component/Authentication/ForgotPassword';

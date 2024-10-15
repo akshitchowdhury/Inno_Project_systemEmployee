@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loggedInUser } from '../Reducers/AuthSlice';
+import { loggedInUser } from '../Reducers/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Auth = () => {

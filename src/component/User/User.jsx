@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchProjects, fetchUsers, loggedOutUser, updateWorkMode } from '../Reducers/AuthSlice';
+import { fetchProjects, fetchUsers, loggedOutUser, updateWorkMode } from '../Reducers/authSlice';
 import {
   Box,
   Button,
